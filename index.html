@@ -1,0 +1,2369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AUTO Earnings</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet">
+
+  <style>
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      min-height: 100%;
+      background: #1a1a2e;
+      overscroll-behavior: none;
+    }
+
+    body {
+      font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      min-height: 100vh;
+      color: #fff;
+      line-height: 1.6;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    /* Background layers (crossfaded between modes) */
+
+    .bg-layer {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+
+    .bg-layer.visible {
+      opacity: 1;
+    }
+
+    .bg-normal {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    }
+
+    .bg-host {
+      background: linear-gradient(135deg, #17132d 0%, #2c232f 100%);
+    }
+
+    .particles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+      overflow: hidden;
+    }
+
+    .particle {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      background: rgba(0, 212, 255, 0.5);
+      border-radius: 50%;
+      animation: float linear infinite;
+      bottom: -10px;
+      transition: background 0.5s ease;
+    }
+
+    .particles.host .particle {
+      background: rgba(170, 100, 140, 0.45);
+    }
+
+    @keyframes float {
+      0% {
+        transform: translateY(0) scale(0);
+        opacity: 0;
+      }
+
+      10% {
+        opacity: 1;
+      }
+
+      90% {
+        opacity: 1;
+      }
+
+      100% {
+        transform: translateY(-110vh) scale(1);
+        opacity: 0;
+      }
+    }
+
+    .stage {
+      position: relative;
+      width: 100%;
+      max-width: 880px;
+    }
+
+    .mode-toggle-btn {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      z-index: 20;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(122, 113, 220, 0.35);
+      border-radius: 12px;
+      background: rgba(122, 113, 220, 0.12);
+      cursor: pointer;
+      filter: grayscale(1);
+      opacity: 0.55;
+      transition: filter 0.25s ease, opacity 0.25s ease, box-shadow 0.25s ease, transform 0.15s ease, border-color 0.25s ease, background 0.25s ease;
+    }
+
+    .mode-toggle-btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .mode-toggle-btn.active {
+      filter: grayscale(0);
+      opacity: 1;
+      box-shadow: 0 0 16px rgba(138, 123, 255, 0.4);
+      border-color: rgba(138, 123, 255, 0.6);
+      background: rgba(138, 123, 255, 0.18);
+    }
+
+    .mode-toggle-btn img {
+      width: 22px;
+      height: 22px;
+      object-fit: contain;
+    }
+
+    .mode-card {
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+
+    .card {
+      position: relative;
+      z-index: 10;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 24px;
+      padding: 36px 40px;
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+    }
+
+    .card-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      background: linear-gradient(120deg, #00d4ff, #0099ff);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 6px;
+    }
+
+    .card-sub {
+      font-size: 0.8rem;
+      color: rgba(255, 255, 255, 0.35);
+      margin-bottom: 26px;
+    }
+
+    .layout {
+      display: flex;
+      gap: 36px;
+      align-items: stretch;
+    }
+
+    .panel {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .panel-divider {
+      width: 1px;
+      background: rgba(255, 255, 255, 0.08);
+      flex-shrink: 0;
+    }
+
+    .section-label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(0, 212, 255, 0.6);
+      margin: 20px 0 12px;
+    }
+
+    .section-label:first-of-type {
+      margin-top: 0;
+    }
+
+    .input-group {
+      margin-bottom: 14px;
+    }
+
+    .input-label {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.8);
+      margin-bottom: 7px;
+    }
+
+    .input-hint {
+      font-size: 0.7rem;
+      color: rgba(255, 255, 255, 0.3);
+      margin-top: 5px;
+    }
+
+    .input-field {
+      width: 100%;
+      padding: 12px 14px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 12px;
+      color: #fff;
+      outline: none;
+      transition: all 0.3s ease;
+    }
+
+    textarea.input-field {
+      resize: vertical;
+      min-height: 130px;
+      max-height: 300px;
+      font-size: 0.8rem;
+      line-height: 1.5;
+      overflow-y: auto;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(255, 255, 255, 0.8) transparent;
+    }
+
+    textarea.input-field::-webkit-scrollbar,
+    .modal::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    textarea.input-field::-webkit-scrollbar-track,
+    .modal::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    textarea.input-field::-webkit-scrollbar-thumb,
+    .modal::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.8);
+      border-radius: 99px;
+    }
+
+    textarea.input-field::-webkit-scrollbar-thumb:hover,
+    .modal::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 255, 255, 1);
+    }
+
+    .input-field:focus {
+      border-color: #00d4ff;
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    .input-field::placeholder {
+      color: rgba(255, 255, 255, 0.3);
+    }
+
+    .row-2 {
+      display: flex;
+      gap: 14px;
+    }
+
+    .row-2 > .input-group {
+      flex: 1;
+    }
+
+    /* Camera buttons */
+
+    .camera-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 23px;
+      height: 23px;
+      padding: 0;
+      border: 1px solid rgba(0, 212, 255, 0.25);
+      border-radius: 7px;
+      background: rgba(0, 212, 255, 0.08);
+      color: rgba(255, 255, 255, 0.65);
+      cursor: pointer;
+      font-size: 0.72rem;
+      line-height: 1;
+      transition: all 0.2s ease;
+    }
+
+    .camera-btn:hover {
+      background: rgba(0, 212, 255, 0.18);
+      border-color: rgba(0, 212, 255, 0.5);
+      color: #fff;
+      transform: translateY(-1px);
+    }
+
+    .camera-btn:active {
+      transform: translateY(0);
+    }
+
+    /* Result */
+
+    .result-box {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 24px;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .result-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.4);
+      margin-bottom: 8px;
+    }
+
+    .result-value {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: 2.1rem;
+      font-weight: 700;
+
+      background: linear-gradient(
+        120deg,
+        #00d4ff 0%,
+        #00d4ff 40%,
+        #7df9ff 50%,
+        #00d4ff 60%,
+        #00d4ff 100%
+      );
+
+      background-size: 200% 100%;
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+
+      animation: shimmer 2.5s ease-in-out infinite;
+
+      line-height: 1;
+      margin-bottom: 20px;
+    }
+
+    .result-value img {
+      width: 34px;
+      height: 34px;
+      object-fit: contain;
+      flex-shrink: 0;
+      -webkit-text-fill-color: initial;
+    }
+
+    @keyframes shimmer {
+      0% {
+        background-position: 200% center;
+      }
+
+      100% {
+        background-position: -200% center;
+      }
+    }
+
+    .bar-track {
+      position: relative;
+      height: 6px;
+      border-radius: 99px;
+      overflow: hidden;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .bar-fill {
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      background: linear-gradient(to right, #29B2EF, #27E057);
+      background-size: 440px 100%;
+      background-attachment: local;
+      border-radius: 99px;
+      transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .bar-labels {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 6px;
+    }
+
+    .bar-labels span {
+      font-size: 0.7rem;
+      color: rgba(255, 255, 255, 0.3);
+    }
+
+    .breakdown {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 22px;
+      padding-top: 20px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .breakdown-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.85rem;
+    }
+
+    .breakdown-row .k {
+      color: rgba(255, 255, 255, 0.45);
+    }
+
+    .breakdown-row .v {
+      color: rgba(255, 255, 255, 0.85);
+      font-weight: 500;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .breakdown-row .v.negative {
+      color: #ff5c5c;
+    }
+
+    .warning-note {
+      display: none;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #ff5c5c;
+      text-align: center;
+      margin-top: 14px;
+      letter-spacing: 0.03em;
+    }
+
+    .warning-note.show {
+      display: block;
+    }
+
+    .footer-note {
+      font-size: 0.75rem;
+      color: rgba(255, 255, 255, 0.25);
+      text-align: center;
+      letter-spacing: 0.05em;
+      margin-top: auto;
+      padding-top: 18px;
+    }
+
+    /* Host mode theme overrides */
+
+    #card-host .card-title {
+      background: linear-gradient(120deg, #8a7bff, #caa0d9);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    #card-host .section-label {
+      color: rgba(138, 123, 255, 0.75);
+    }
+
+    #card-host .input-field:focus {
+      border-color: #8a7bff;
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    #card-host .camera-btn {
+      border-color: rgba(138, 123, 255, 0.25);
+      background: rgba(138, 123, 255, 0.08);
+    }
+
+    #card-host .camera-btn:hover {
+      background: rgba(138, 123, 255, 0.18);
+      border-color: rgba(138, 123, 255, 0.5);
+    }
+
+    #card-host .bar-fill {
+      background: linear-gradient(to right, #6a5acd, #caa0d9);
+    }
+
+    #card-host .result-value {
+      background: linear-gradient(120deg, #8a7bff 0%, #8a7bff 40%, #d3b8e0 50%, #8a7bff 60%, #8a7bff 100%);
+      background-size: 200% 100%;
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    #card-host .info-button:hover {
+      color: #fff;
+      border-color: rgba(138, 123, 255, 0.35);
+      background: rgba(138, 123, 255, 0.08);
+    }
+
+    .exp-icon {
+      width: 15px;
+      height: 15px;
+      object-fit: contain;
+      vertical-align: -2px;
+      margin-left: 4px;
+    }
+
+    /* Information button */
+
+    .info-button-wrapper {
+      display: flex;
+      justify-content: center;
+      margin-top: 22px;
+    }
+
+    .info-button {
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.05);
+      color: rgba(255, 255, 255, 0.55);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 500;
+      padding: 7px 14px;
+      border-radius: 9px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .info-button:hover {
+      color: #fff;
+      border-color: rgba(0, 212, 255, 0.35);
+      background: rgba(0, 212, 255, 0.08);
+    }
+
+    /* Modal */
+
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background: rgba(5, 8, 20, 0.72);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+
+    .modal-overlay.show {
+      display: flex;
+    }
+
+    .modal {
+      position: relative;
+      width: 100%;
+      max-width: 680px;
+      max-height: 90vh;
+      overflow-y: auto;
+      background: #171b32;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 18px;
+      padding: 28px;
+
+      scrollbar-width: thin;
+      scrollbar-color: rgba(255, 255, 255, 0.8) transparent;
+
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+
+      animation: modalIn 0.2s ease-out;
+    }
+
+    @keyframes modalIn {
+      from {
+        opacity: 0;
+        transform: translateY(8px) scale(0.98);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 14px;
+      right: 15px;
+      width: 30px;
+      height: 30px;
+      border: none;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.06);
+      color: rgba(255, 255, 255, 0.55);
+      cursor: pointer;
+      font-size: 1.1rem;
+      line-height: 1;
+      transition: all 0.2s ease;
+    }
+
+    .modal-close:hover {
+      background: rgba(255, 92, 92, 0.15);
+      color: #fff;
+    }
+
+    .modal-title {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: 1.55rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 20px;
+      padding-right: 35px;
+    }
+
+    .modal-section {
+      margin-bottom: 22px;
+    }
+
+    .modal-section:last-child {
+      margin-bottom: 0;
+    }
+
+    .modal-section h3 {
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #00d4ff;
+      margin-bottom: 8px;
+    }
+
+    .modal-section p {
+      font-size: 0.82rem;
+      line-height: 1.65;
+      color: rgba(255, 255, 255, 0.68);
+    }
+
+    .modal-section ul {
+      margin: 10px 0 0 22px;
+      padding-left: 18px;
+    }
+
+    .modal-section li {
+      margin-bottom: 8px;
+      padding-left: 3px;
+      font-size: 0.82rem;
+      line-height: 1.55;
+      font-weight: 400;
+      color: rgba(255, 255, 255, 0.68);
+    }
+
+    .image-modal {
+      max-width: 760px;
+    }
+
+    .image-modal img {
+      display: block;
+      width: 100%;
+      max-height: 70vh;
+      object-fit: contain;
+      border-radius: 10px;
+      margin-bottom: 16px;
+      background: rgba(0, 0, 0, 0.2);
+    }
+
+    .image-caption {
+      font-size: 0.82rem;
+      line-height: 1.55;
+      color: rgba(255, 255, 255, 0.68);
+    }
+
+    .image-caption strong {
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    .image-caption-sub {
+      display: block;
+      margin-top: 7px;
+      color: rgba(255, 255, 255, 0.35);
+      font-size: 0.74rem;
+    }
+
+    @media (max-width: 700px) {
+      .layout {
+        flex-direction: column;
+      }
+
+      .panel-divider {
+        width: 100%;
+        height: 1px;
+      }
+
+      .card {
+        padding: 28px 22px;
+      }
+
+      .row-2 {
+        flex-direction: column;
+        gap: 0;
+      }
+
+      .modal {
+        padding: 22px;
+      }
+
+      .result-value {
+        font-size: 1.8rem;
+      }
+
+      .result-value img {
+        width: 30px;
+        height: 30px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="bg-layer bg-normal visible" id="bg-normal"></div>
+  <div class="bg-layer bg-host" id="bg-host"></div>
+
+  <div class="particles" id="particles"></div>
+
+  <div class="stage">
+
+    <button
+      class="mode-toggle-btn"
+      id="mode-toggle"
+      type="button"
+      onclick="toggleMode()"
+      aria-label="Switch to Host mode"
+    >
+      <img src="https://media.discordapp.net/attachments/1492616327830175856/1545896220013105233/Host.png?ex=6a9dcf8c&is=6a9c7e0c&hm=dfaf1fc1ad0f7cd9088efa1bb811a9405753f121f9e47fbeff3247cc76050102&=&format=webp&quality=lossless" alt="">
+    </button>
+
+  <div class="card mode-card" id="card-auto">
+
+    <div class="card-title">AUTO Earnings</div>
+
+    <div class="card-sub">
+      Expected winnings from 24h of auto-join giveaways
+    </div>
+
+    <div class="layout">
+
+      <!-- LEFT PANEL -->
+      <div class="panel">
+
+        <div class="input-group">
+
+          <label class="input-label" for="host">
+
+            Full Host leaderboard
+
+            <button
+              class="camera-btn"
+              type="button"
+              onclick="openModal('host-modal')"
+              aria-label="Show host leaderboard example"
+            >
+              📷
+            </button>
+
+          </label>
+
+          <textarea
+            class="input-field"
+            id="host"
+            placeholder="Paste the full host leaderboard here..."
+          >:Z30: @EXP CHEST 441B :Z50: :Z30: @that_guy00001 22000M :Z50: :Z30: @Fire 22000M :Z50: :Z30: @𝐌𝐫𝐬 𝐌 20000M :Z50: :Z30: @DigitalGrave🦜 18250M :Z50: :Z30: @Darth_Phantom 18000M :Z50: :Z30: @Ujjal😶‍🌫️👻 18000M :Z50: :Z30: @Only_Gus 17000M :Z50: :Z30: @｡✧TamagoBelle₊˚⊹ ʚɞ 15600M :Z50: :Z30: @Meristo 15000M :Z50: :Z30: @Karo 14050M :Z50: :Z30: @euphboy 14000M :Z50: :Z30: @𝒩ikuz 14000M :Z50: :Z30: @Patrick 13055M :Z50: :Z30: @_official_ttm_ 13050M :Z50:</textarea>
+
+          <div class="input-hint">
+            Paste as-is — amounts (like 250B or 14000M) are found automatically.
+          </div>
+
+        </div>
+
+        <div class="input-group">
+
+          <label class="input-label" for="autoN">
+
+            Amount of Entries
+
+            <button
+              class="camera-btn"
+              type="button"
+              onclick="openModal('entries-modal')"
+              aria-label="Show entries example"
+            >
+              📷
+            </button>
+
+          </label>
+
+          <input
+            class="input-field"
+            id="autoN"
+            type="number"
+            min="2"
+            value="300"
+            placeholder="e.g. 300"
+          >
+
+        </div>
+
+        <div class="section-label">
+          Your stats
+        </div>
+
+        <div class="row-2">
+
+          <div class="input-group">
+
+            <label class="input-label" for="position">
+              Your Gem rank position
+            </label>
+
+            <input
+              class="input-field"
+              id="position"
+              type="number"
+              min="1"
+              value="150"
+              placeholder="e.g. 150"
+            >
+
+            <div class="input-hint">
+              1 = top of the leaderboard.
+            </div>
+
+          </div>
+
+          <div class="input-group">
+
+            <label class="input-label" for="level">
+              Levels
+            </label>
+
+            <input
+              class="input-field"
+              id="level"
+              type="number"
+              min="1"
+              max="100"
+              value="100"
+              placeholder="e.g. 100"
+            >
+
+            <div class="input-hint">
+              Between 1 and 100.
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="panel-divider"></div>
+
+      <!-- RIGHT PANEL -->
+
+      <div class="panel">
+
+        <div class="result-box">
+
+          <div class="result-label">
+            Expected Winnings (24h)
+          </div>
+
+          <!-- EXPECTED BALANCE + ANIMATED Z50 IMAGE -->
+
+          <div class="result-value" id="ev-display">
+
+            <span id="ev-amount">—</span>
+
+            <img
+              src="https://media.discordapp.net/attachments/1492616327830175856/1545896044854910978/gem.png?ex=6a9dcf62&is=6a9c7de2&hm=a039a7979fd8927c74f8de3a6c60bb34905bb6a095b4517183e1ba78babc52d4&=&format=webp&quality=lossless"
+              alt=""
+              aria-hidden="true"
+            >
+
+          </div>
+
+          <div class="bar-track">
+
+            <div
+              class="bar-fill"
+              id="bar-fill"
+              style="width: 0%;"
+            ></div>
+
+          </div>
+
+          <div class="bar-labels">
+            <span id="bar-min-label">0.1×</span>
+            <span>5×</span>
+          </div>
+
+          <div class="breakdown">
+
+            <div class="breakdown-row">
+              <span class="k">Total giveaway pool</span>
+              <span class="v" id="g-val">—</span>
+            </div>
+
+            <div class="breakdown-row">
+              <span class="k">Gem multiplier</span>
+              <span class="v" id="m-val">—</span>
+            </div>
+
+            <div class="breakdown-row">
+              <span class="k">Win chance per giveaway</span>
+              <span class="v" id="p-val">—</span>
+            </div>
+
+            <div class="breakdown-row">
+              <span class="k">Profit</span>
+              <span class="v" id="profit-val">—</span>
+            </div>
+
+          </div>
+
+          <div
+            class="warning-note"
+            id="profit-warning"
+          >
+            Giveaway Auto is not recommended
+          </div>
+
+          <div
+            class="footer-note"
+            id="footer"
+          >
+            Tool by WOAW
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="info-button-wrapper">
+
+      <button
+        class="info-button"
+        type="button"
+        onclick="openModal('info-modal')"
+      >
+        ⓘ Extra information
+      </button>
+
+    </div>
+
+  </div>
+
+  <!-- HOST MODE CARD -->
+
+  <div class="card mode-card" id="card-host" style="display: none;">
+
+    <div class="card-title">HOST Earnings</div>
+
+    <div class="card-sub">
+      Expected winnings from 24h of hosting + auto-join giveaways
+    </div>
+
+    <div class="layout">
+
+      <!-- LEFT PANEL -->
+      <div class="panel">
+
+        <div class="input-group">
+
+          <label class="input-label" for="host-h">
+
+            Full Host leaderboard
+
+            <button
+              class="camera-btn"
+              type="button"
+              onclick="openModal('host-modal')"
+              aria-label="Show host leaderboard example"
+            >
+              📷
+            </button>
+
+          </label>
+
+          <textarea
+            class="input-field"
+            id="host-h"
+            placeholder="Paste the full host leaderboard here..."
+          >:Z30: @EXP CHEST 441B :Z50: :Z30: @that_guy00001 22000M :Z50: :Z30: @Fire 22000M :Z50: :Z30: @𝐌𝐫𝐬 𝐌 20000M :Z50: :Z30: @DigitalGrave🦜 18250M :Z50: :Z30: @Darth_Phantom 18000M :Z50: :Z30: @Ujjal😶‍🌫️👻 18000M :Z50: :Z30: @Only_Gus 17000M :Z50: :Z30: @｡✧TamagoBelle₊˚⊹ ʚɞ 15600M :Z50: :Z30: @Meristo 15000M :Z50: :Z30: @Karo 14050M :Z50: :Z30: @euphboy 14000M :Z50: :Z30: @𝒩ikuz 14000M :Z50: :Z30: @Patrick 13055M :Z50: :Z30: @_official_ttm_ 13050M :Z50:</textarea>
+
+          <div class="input-hint">
+            Paste as-is — amounts (like 250B or 14000M) are found automatically.
+          </div>
+
+        </div>
+
+        <div class="input-group">
+
+          <label class="input-label" for="host-autoN">
+
+            Amount of Entries
+
+            <button
+              class="camera-btn"
+              type="button"
+              onclick="openModal('entries-modal')"
+              aria-label="Show entries example"
+            >
+              📷
+            </button>
+
+          </label>
+
+          <input
+            class="input-field"
+            id="host-autoN"
+            type="number"
+            min="2"
+            value="300"
+            placeholder="e.g. 300"
+          >
+
+        </div>
+
+        <div class="section-label">
+          Your stats
+        </div>
+
+        <div class="row-2">
+
+          <div class="input-group">
+
+            <label class="input-label" for="host-position">
+              Your Gem rank position
+            </label>
+
+            <input
+              class="input-field"
+              id="host-position"
+              type="number"
+              min="1"
+              value="150"
+              placeholder="e.g. 150"
+            >
+
+            <div class="input-hint">
+              1 = top of the leaderboard.
+            </div>
+
+          </div>
+
+          <div class="input-group">
+
+            <label class="input-label" for="host-level">
+              Levels
+            </label>
+
+            <input
+              class="input-field"
+              id="host-level"
+              type="number"
+              min="1"
+              max="100"
+              value="100"
+              placeholder="e.g. 100"
+            >
+
+            <div class="input-hint">
+              Between 1 and 100.
+            </div>
+
+          </div>
+
+        </div>
+
+        <div class="section-label">
+          Your hosting
+        </div>
+
+        <div class="input-group" style="margin-bottom: 0;">
+
+          <label class="input-label" for="hosted-amount">
+            How much you hosted
+          </label>
+
+          <input
+            class="input-field"
+            id="hosted-amount"
+            type="text"
+            value="1B"
+            placeholder="e.g. 1B"
+          >
+
+          <div class="input-hint">
+            Accepts shorthand like 250M or 1.5B. Hosting also enters you into the
+            private host pool — shared by an average of 28 hosts — which typically
+            nets you about 1.8× what plain Auto would give.
+          </div>
+
+        </div>
+
+        <div class="section-label">
+          Channel giveaways
+        </div>
+
+        <div class="input-group">
+
+          <label class="input-label" for="balance">
+            Your balance
+          </label>
+
+          <input
+            class="input-field"
+            id="balance"
+            type="text"
+            value="1B"
+            placeholder="e.g. 1B"
+          >
+
+          <div class="input-hint">
+            Accepts shorthand like 250M or 1.5B. Used for interest, channel
+            giveaway entries, and the /exchange conversion.
+          </div>
+
+        </div>
+
+        <div class="row-2" style="margin-bottom: 0;">
+
+          <div class="input-group" style="margin-bottom: 0;">
+
+            <label class="input-label" for="is-friday">
+              Is it Friday?
+            </label>
+
+            <select class="input-field" id="is-friday">
+              <option value="no">No</option>
+              <option value="yes">Yes</option>
+            </select>
+
+          </div>
+
+          <div class="input-group" style="margin-bottom: 0;">
+
+            <label class="input-label" for="is-booster">
+              Server booster?
+            </label>
+
+            <select class="input-field" id="is-booster">
+              <option value="no">No</option>
+              <option value="yes">Yes</option>
+            </select>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="panel-divider"></div>
+
+      <!-- RIGHT PANEL -->
+
+      <div class="panel">
+
+        <div class="result-box">
+
+          <div class="result-label">
+            Expected Winnings (24h)
+          </div>
+
+          <div class="result-value" id="host-ev-display">
+
+            <span id="host-ev-amount">—</span>
+
+            <img
+              src="https://media.discordapp.net/attachments/1492616327830175856/1545896044854910978/gem.png?ex=6a9dcf62&is=6a9c7de2&hm=a039a7979fd8927c74f8de3a6c60bb34905bb6a095b4517183e1ba78babc52d4&=&format=webp&quality=lossless"
+              alt=""
+              aria-hidden="true"
+            >
+
+          </div>
+
+          <div class="bar-track">
+
+            <div
+              class="bar-fill"
+              id="host-bar-fill"
+              style="width: 0%;"
+            ></div>
+
+          </div>
+
+          <div class="bar-labels">
+            <span>0.1×</span>
+            <span>5×</span>
+          </div>
+
+          <div class="breakdown">
+
+            <div class="breakdown-row">
+              <span class="k">Total giveaway pool</span>
+              <span class="v" id="host-g-val">—</span>
+            </div>
+
+            <div class="breakdown-row">
+              <span class="k">Gem multiplier</span>
+              <span class="v" id="host-m-val">—</span>
+            </div>
+
+            <div class="breakdown-row">
+              <span class="k">Host pool boost</span>
+              <span class="v" id="host-bonus-val">—</span>
+            </div>
+
+            <div class="breakdown-row">
+              <span class="k">Win chance per giveaway</span>
+              <span class="v" id="host-p-val">—</span>
+            </div>
+
+            <div class="breakdown-row">
+              <span class="k">EXP earned</span>
+              <span class="v" id="host-exp-val">
+                —
+                <img class="exp-icon" src="https://media.discordapp.net/attachments/1492616327830175856/1545896423294369892/EXP.png?ex=6a9dcfbc&is=6a9c7e3c&hm=837b57d03158cc1d846572a4fdd2a67f18605aa639c2337823693002f50111d5&=&format=webp&quality=lossless" alt="">
+              </span>
+            </div>
+
+            <div class="breakdown-row">
+              <span class="k">Profit from interest (0.3%)</span>
+              <span class="v" id="host-interest-val">—</span>
+            </div>
+
+            <div class="breakdown-row">
+              <span class="k">Weekly gw profit</span>
+              <span class="v" id="host-weekly-val">—</span>
+            </div>
+
+            <div class="breakdown-row">
+              <span class="k">Daily gw profit</span>
+              <span class="v" id="host-daily-val">—</span>
+            </div>
+
+            <div class="breakdown-row">
+              <span class="k">Gems gw profit</span>
+              <span class="v" id="host-gems-val">—</span>
+            </div>
+
+            <div class="breakdown-row">
+              <span class="k">Booster gw profit</span>
+              <span class="v" id="host-booster-val">—</span>
+            </div>
+
+            <div class="breakdown-row">
+              <span class="k">Profit from /exchange</span>
+              <span class="v" id="host-exchange-val">—</span>
+            </div>
+
+            <div class="breakdown-row">
+              <span class="k">Profit</span>
+              <span class="v" id="host-profit-val">—</span>
+            </div>
+
+          </div>
+
+          <div
+            class="warning-note"
+            id="host-profit-warning"
+          >
+            Giveaway Auto is not recommended
+          </div>
+
+          <div class="footer-note">
+            Tool by WOAW
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="info-button-wrapper">
+
+      <button
+        class="info-button"
+        type="button"
+        onclick="openModal('info-modal')"
+      >
+        ⓘ Extra information
+      </button>
+
+    </div>
+
+  </div>
+
+  </div>
+
+  <!-- =========================
+       EXTRA INFORMATION MODAL
+       ========================= -->
+
+  <div
+    class="modal-overlay"
+    id="info-modal"
+    onclick="closeOnOverlay(event, 'info-modal')"
+  >
+
+    <div class="modal">
+
+      <button
+        class="modal-close"
+        type="button"
+        onclick="closeModal('info-modal')"
+        aria-label="Close"
+      >
+        ×
+      </button>
+
+      <div class="modal-title">
+        Extra information
+      </div>
+
+      <div class="modal-section">
+
+        <h3>
+          How this works
+        </h3>
+
+        <p>
+          This estimator works by estimating the total amount of balance given away
+          in a day using the host leaderboard and total amount of users with auto join.
+          It then uses a concave curve to estimate the multiplier your gem rank is likely
+          to give you.
+        </p>
+
+      </div>
+
+      <div class="modal-section">
+
+        <h3>
+          Assumptions
+        </h3>
+
+        <p>
+          To work, this tool relies on several assumptions due to the lack of knowledge
+          we have concerning the way EXP handles pools, gem rank and giveaways:
+        </p>
+
+        <ul>
+
+          <li>
+            Every user who has auto is assumed to have given away 1B, except for the 15 in host leaderboard.
+          </li>
+
+          <li>
+            The members in /giveaway daily are assumed to be the only members to have hosted more than 1B.
+          </li>
+
+          <li>
+            The tool assumes everything stays the same for the next 24 hours; it can't predict future giveaways.
+          </li>
+
+          <li>
+            The 1B giveaways in chat mostly come from losses in chests, so to count them,
+            the tool uses the CHEST EXP's stats in the leaderboard you paste.
+          </li>
+
+          <li>
+            Every user is assumed to have level 100, since everyone suggests new members to auto at level 100.
+          </li>
+
+          <li>
+            The total number of users is assumed to stay the same for 24 hours.
+          </li>
+
+          <li>
+            The 0.1–5× limits aren't assumed; they were shared by staff.
+            Everything in between is calculated based on assumptions.
+          </li>
+
+          <li>
+            Your gem rank is assumed to stay stable for the next 24 hours.
+          </li>
+
+          <li>
+            The tool doesn't count the private giveaway pool for hosts,
+            and the mechanic which gives everyone a 1× multiplier during the first 1B.
+            Those add way too much complexity for a simple tool, so they might be added in the future.
+          </li>
+
+          <li>
+            Channel giveaway entries are estimated from rough member-count milestones
+            per balance tier, plus a gem-rank-based estimate for the wealthiest members.
+            Every member below a tier is assumed to sit exactly at that tier's balance.
+          </li>
+
+        </ul>
+
+      </div>
+
+      <div class="modal-section">
+
+        <h3>
+          How to use the tool
+        </h3>
+
+        <p>
+          Paste the full host leaderboard into the first input, then enter the total
+          number of users currently using Auto. Finally, enter your Gem rank position
+          and your level. The estimator will calculate an expected 24-hour result.
+        </p>
+
+      </div>
+
+      <div class="modal-section">
+
+        <h3>
+          Disclaimer
+        </h3>
+
+        <p>
+          This is an estimation tool, not an exact prediction. The actual amount you
+          win can vary significantly because giveaway activity, player behaviour and
+          Gem rank can change over time.
+        </p>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- =========================
+       HOST IMAGE MODAL
+       ========================= -->
+
+  <div
+    class="modal-overlay"
+    id="host-modal"
+    onclick="closeOnOverlay(event, 'host-modal')"
+  >
+
+    <div class="modal image-modal">
+
+      <button
+        class="modal-close"
+        type="button"
+        onclick="closeModal('host-modal')"
+        aria-label="Close"
+      >
+        ×
+      </button>
+
+      <div class="modal-title">
+        Host leaderboard
+      </div>
+
+      <img
+        src="https://media.discordapp.net/attachments/1492616327830175856/1545857686791266345/image.png?ex=6a9daba9&is=6a9c5a29&hm=772858b4c9e44731b13fa7c80658a667c526045689d2fb43429a9ea44d52d7aa&=&format=webp&quality=lossless"
+        alt="Host leaderboard example"
+      >
+
+      <div class="image-caption">
+        Run the <strong>/giveaway daily</strong> command and paste the leaderboard in the input
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- =========================
+       ENTRIES IMAGE MODAL
+       ========================= -->
+
+  <div
+    class="modal-overlay"
+    id="entries-modal"
+    onclick="closeOnOverlay(event, 'entries-modal')"
+  >
+
+    <div class="modal image-modal">
+
+      <button
+        class="modal-close"
+        type="button"
+        onclick="closeModal('entries-modal')"
+        aria-label="Close"
+      >
+        ×
+      </button>
+
+      <div class="modal-title">
+        Amount of Entries
+      </div>
+
+      <img
+        src="https://media.discordapp.net/attachments/1492616327830175856/1545875496250646578/IMG_5614.png?ex=6a9dbc3f&is=6a9c6abf&hm=b12d4978e842ebb61bce9350cbb3f7047500ee7da3e941a0fce5feb144b692bc&=&format=webp&quality=lossless"
+        alt="Giveaway entries example"
+      >
+
+      <div class="image-caption">
+        Find a recent giveaway result message (for a 250M+ giveaway)
+        and find the total amount of entries
+      </div>
+
+    </div>
+
+  </div>
+
+  <script>
+
+    /* =========================
+       PARTICLES
+       ========================= */
+
+    const particlesContainer =
+      document.getElementById('particles');
+
+    const particleCount = 30;
+
+    for (let i = 0; i < particleCount; i++) {
+
+      const particle =
+        document.createElement('div');
+
+      particle.className =
+        'particle';
+
+      particle.style.left =
+        Math.random() * 100 + '%';
+
+      particle.style.animationDuration =
+        (Math.random() * 10 + 10) + 's';
+
+      particle.style.animationDelay =
+        (Math.random() * -20) + 's';
+
+      particle.style.opacity =
+        Math.random() * 0.4 + 0.4;
+
+      particlesContainer.appendChild(particle);
+
+    }
+
+    /* =========================
+       HOST LEADERBOARD PARSER
+       ========================= */
+
+    function extractHostTotal(text) {
+
+      if (!text) return 0;
+
+      const tokens =
+        text.split(/\s+/);
+
+      const re =
+        /^([\d,]+(?:\.\d+)?)([mb])$/i;
+
+      let total = 0;
+
+      for (const tok of tokens) {
+
+        const m =
+          tok.match(re);
+
+        if (m) {
+
+          const num =
+            parseFloat(
+              m[1].replace(/,/g, '')
+            );
+
+          if (!isNaN(num)) {
+
+            total +=
+              m[2].toLowerCase() === 'b'
+                ? num * 1e9
+                : num * 1e6;
+
+          }
+
+        }
+
+      }
+
+      return total;
+    }
+
+    /* =========================
+       NUMBER FORMATTING
+       ========================= */
+
+    function formatAmount(n) {
+
+      const sign =
+        n < 0 ? '-' : '';
+
+      n =
+        Math.abs(n);
+
+      if (n >= 1e9) {
+
+        return sign +
+          (n / 1e9).toLocaleString(
+            undefined,
+            {
+              maximumFractionDigits: 2
+            }
+          ) +
+          'B';
+
+      }
+
+      if (n >= 1e6) {
+
+        return sign +
+          (n / 1e6).toLocaleString(
+            undefined,
+            {
+              maximumFractionDigits: 2
+            }
+          ) +
+          'M';
+
+      }
+
+      if (n >= 1e3) {
+
+        return sign +
+          (n / 1e3).toLocaleString(
+            undefined,
+            {
+              maximumFractionDigits: 2
+            }
+          ) +
+          'K';
+
+      }
+
+      return sign +
+        n.toLocaleString(
+          undefined,
+          {
+            maximumFractionDigits: 2
+          }
+        );
+
+    }
+
+    /* =========================
+       CALIBRATION CONSTANTS
+       ========================= */
+
+    const MULT_MIN = 0.1;
+    const MULT_MAX = 5;
+
+    const CURVE_K = 1.40;
+
+    const ENTRIES_SCALE = 223;
+
+    /* =========================
+       GEM MULTIPLIER
+       ========================= */
+
+    function calcMultiplier(p, n) {
+
+      if (n <= 1) {
+        return MULT_MAX;
+      }
+
+      const x =
+        (n - p) / (n - 1);
+
+      return MULT_MIN +
+        (MULT_MAX - MULT_MIN) *
+        Math.pow(x, CURVE_K);
+
+    }
+
+    /* =========================
+       ESTIMATION RANGE
+       ========================= */
+
+    function rangeDivider(xBillions) {
+
+      const D0 = 10;
+      const Dmin = 2.5;
+      const k = 0.05;
+
+      return Math.max(
+        Dmin,
+        D0 / (1 + k * xBillions)
+      );
+
+    }
+
+    function rangeMultiplier(divider) {
+
+      return divider * 0.75;
+
+    }
+
+    /* =========================
+       ELEMENTS
+       ========================= */
+
+    const hostInput =
+      document.getElementById('host');
+
+    const autoInput =
+      document.getElementById('autoN');
+
+    const posInput =
+      document.getElementById('position');
+
+    const levelInput =
+      document.getElementById('level');
+
+    const evAmount =
+      document.getElementById('ev-amount');
+
+    const barFill =
+      document.getElementById('bar-fill');
+
+    const gVal =
+      document.getElementById('g-val');
+
+    const mVal =
+      document.getElementById('m-val');
+
+    const pVal =
+      document.getElementById('p-val');
+
+    const profitVal =
+      document.getElementById('profit-val');
+
+    const profitWarning =
+      document.getElementById('profit-warning');
+
+    /* =========================
+       CALCULATOR
+       ========================= */
+
+    function update() {
+
+      const H =
+        extractHostTotal(
+          hostInput.value
+        );
+
+      const N =
+        Math.max(
+          2,
+          parseInt(autoInput.value) || 2
+        );
+
+      const pos =
+        Math.max(
+          1,
+          Math.min(
+            parseInt(posInput.value) || 1,
+            N
+          )
+        );
+
+      const level =
+        Math.max(
+          1,
+          Math.min(
+            parseInt(levelInput.value) || 100,
+            100
+          )
+        );
+
+      /* Total giveaway pool */
+
+      const G =
+        H + N * 1e9;
+
+      /* Your Gem multiplier */
+
+      const My =
+        calcMultiplier(
+          pos,
+          N
+        );
+
+      /* Estimated total entries */
+
+      const Et =
+        ENTRIES_SCALE * N;
+
+      /* Your probability per giveaway */
+
+      const P =
+        (level * My) / Et;
+
+      /* Expected winnings */
+
+      const EV =
+        G * P;
+
+      /* Estimation range */
+
+      const xBillions =
+        EV / 1e9;
+
+      const D =
+        rangeDivider(
+          xBillions
+        );
+
+      const M =
+        rangeMultiplier(
+          D
+        );
+
+      const X =
+        Math.max(
+          0,
+          EV - EV / D
+        );
+
+      const EV_low =
+        Math.max(
+          0,
+          X - X / D
+        );
+
+      const EV_high =
+        X + X / D;
+
+      /* Profit */
+
+      const profit_low =
+        EV_low - 1e9;
+
+      const profit_high =
+        EV_high - 1e9;
+
+      /* Gem rank bar */
+
+      const t =
+        (My - MULT_MIN) /
+        (MULT_MAX - MULT_MIN);
+
+      const pct =
+        t * 100;
+
+      /* Display */
+
+      evAmount.textContent =
+        `${formatAmount(EV_low)} - ${formatAmount(EV_high)}`;
+
+      barFill.style.width =
+        `${pct}%`;
+
+      gVal.textContent =
+        formatAmount(G);
+
+      mVal.textContent =
+        `${My.toFixed(2)}×`;
+
+      pVal.textContent =
+        `${(P * 100).toFixed(4)}%`;
+
+      profitVal.textContent =
+        `${formatAmount(profit_low)} - ${formatAmount(profit_high)}`;
+
+      const isNegative =
+        profit_high < 0;
+
+      profitVal.classList.toggle(
+        'negative',
+        isNegative
+      );
+
+      profitWarning.classList.toggle(
+        'show',
+        isNegative
+      );
+
+    }
+
+    /* =========================
+       INPUT LISTENERS
+       ========================= */
+
+    [
+      hostInput,
+      autoInput,
+      posInput,
+      levelInput
+    ].forEach(el => {
+
+      el.addEventListener(
+        'input',
+        update
+      );
+
+    });
+
+    /* =========================
+       MODALS
+       ========================= */
+
+    function openModal(id) {
+
+      const modal =
+        document.getElementById(id);
+
+      if (!modal) return;
+
+      modal.classList.add('show');
+
+      document.body.style.overflow =
+        'hidden';
+
+    }
+
+    function closeModal(id) {
+
+      const modal =
+        document.getElementById(id);
+
+      if (!modal) return;
+
+      modal.classList.remove('show');
+
+      const anyOpen =
+        document.querySelector(
+          '.modal-overlay.show'
+        );
+
+      if (!anyOpen) {
+
+        document.body.style.overflow =
+          '';
+
+      }
+
+    }
+
+    function closeOnOverlay(event, id) {
+
+      if (event.target.id === id) {
+
+        closeModal(id);
+
+      }
+
+    }
+
+    /* =========================
+       ESCAPE KEY
+       ========================= */
+
+    document.addEventListener(
+      'keydown',
+      function(event) {
+
+        if (event.key !== 'Escape') {
+          return;
+        }
+
+        const open =
+          document.querySelector(
+            '.modal-overlay.show'
+          );
+
+        if (open) {
+
+          closeModal(
+            open.id
+          );
+
+        }
+
+      }
+    );
+
+    /* =========================
+       INITIAL CALCULATION
+       ========================= */
+
+    update();
+
+    /* =========================
+       SINGLE-VALUE AMOUNT PARSER
+       (for "how much you hosted" / "balance")
+       ========================= */
+
+    function parseSingleAmount(str) {
+
+      if (!str) return 0;
+
+      const s = str.trim();
+
+      const m = s.match(/^([\d,]+(?:\.\d+)?)\s*([mb])$/i);
+
+      if (!m) {
+        const n = parseFloat(s.replace(/,/g, ''));
+        return isNaN(n) ? 0 : n;
+      }
+
+      const num = parseFloat(m[1].replace(/,/g, ''));
+
+      return m[2].toLowerCase() === 'b' ? num * 1e9 : num * 1e6;
+    }
+
+    /* =========================
+       CHANNEL GIVEAWAY CONSTANTS
+       ========================= */
+
+    const ENTRY_PER_BALANCE = 32e6; // 32M balance = 1 entry
+
+    // Member balance milestones below 48B — every member in a tier is
+    // assumed to sit exactly at that tier's balance
+    const MEMBER_MILESTONES = [
+      { count: 50000, balance: 50e6 },
+      { count: 7200,  balance: 400e6 },
+      { count: 1900,  balance: 1.2e9 },
+      { count: 1800,  balance: 2.5e9 },
+      { count: 1300,  balance: 6e9 },
+      { count: 950,   balance: 20e9 }
+    ];
+
+    // Top 150 gem-rank members (>48B), estimated from gem rank position
+    // + reported balance instead of a flat member count
+    const TOP_GEM_GROUPS = [
+      { count: 30, avgBalance: 54e9 },   // rank ~150-120, 48-60B
+      { count: 40, avgBalance: 95e9 },   // rank ~120-80, 70-120B
+      { count: 30, avgBalance: 315e9 },  // rank ~79-50, 130-500B
+      { count: 20, avgBalance: 600e9 },  // rank ~49-30, 500-700B
+      { count: 15, avgBalance: 850e9 },  // rank ~29-15, 700-1000B
+      { count: 15, avgBalance: 5500e9 }  // rank ~15-1, 1000-10000B
+    ];
+
+    function computeTotalChannelEntries() {
+
+      let entries = 0;
+
+      MEMBER_MILESTONES.forEach(m => {
+        entries += m.count * (m.balance / ENTRY_PER_BALANCE);
+      });
+
+      TOP_GEM_GROUPS.forEach(g => {
+        entries += g.count * (g.avgBalance / ENTRY_PER_BALANCE);
+      });
+
+      return entries;
+    }
+
+    const TOTAL_CHANNEL_ENTRIES =
+      computeTotalChannelEntries();
+
+    // Private booster giveaway pool: 120 boosters, average balance 20B
+    const BOOSTER_POOL_SIZE = 120;
+    const BOOSTER_AVG_BALANCE = 20e9;
+
+    const BOOSTER_POOL_ENTRIES =
+      BOOSTER_POOL_SIZE * (BOOSTER_AVG_BALANCE / ENTRY_PER_BALANCE);
+
+    const INTEREST_RATE = 0.003; // 0.3%
+    const EXCHANGE_EXP_UNIT = 500;
+    const EXCHANGE_BAL_PER_UNIT = 8e6; // 500 EXP = 8M balance
+
+    function calcUserEntries(balance, isBooster) {
+
+      let entries =
+        balance / ENTRY_PER_BALANCE;
+
+      if (isBooster) {
+        entries += 100;
+      }
+
+      entries += 2500; // hosting is always assumed on this page
+
+      return entries;
+    }
+
+    function expectedGiveawayProfit(draws, winnersPerDraw, prizePerWin, userEntries, poolEntries) {
+
+      if (poolEntries <= 0) return 0;
+
+      const winChancePerDraw =
+        winnersPerDraw * (userEntries / poolEntries);
+
+      return draws * winChancePerDraw * prizePerWin;
+    }
+
+    /* =========================
+       HOST MODE ELEMENTS
+       ========================= */
+
+    const hostHInput      = document.getElementById('host-h');
+    const hostAutoInput   = document.getElementById('host-autoN');
+    const hostPosInput    = document.getElementById('host-position');
+    const hostLevelInput  = document.getElementById('host-level');
+    const hostedAmtInput  = document.getElementById('hosted-amount');
+
+    const balanceInput    = document.getElementById('balance');
+    const fridayInput     = document.getElementById('is-friday');
+    const boosterInput    = document.getElementById('is-booster');
+
+    const hostEvAmount    = document.getElementById('host-ev-amount');
+    const hostBarFill     = document.getElementById('host-bar-fill');
+    const hostGVal        = document.getElementById('host-g-val');
+    const hostMVal        = document.getElementById('host-m-val');
+    const hostBonusVal    = document.getElementById('host-bonus-val');
+    const hostPVal        = document.getElementById('host-p-val');
+    const hostExpVal      = document.getElementById('host-exp-val');
+    const hostInterestVal = document.getElementById('host-interest-val');
+    const hostWeeklyVal   = document.getElementById('host-weekly-val');
+    const hostDailyVal    = document.getElementById('host-daily-val');
+    const hostGemsVal     = document.getElementById('host-gems-val');
+    const hostBoosterVal  = document.getElementById('host-booster-val');
+    const hostExchangeVal = document.getElementById('host-exchange-val');
+    const hostProfitVal   = document.getElementById('host-profit-val');
+    const hostProfitWarning = document.getElementById('host-profit-warning');
+
+    const HOST_POOL_SIZE = 28;      // average number of hosts sharing the private pool
+    const HOST_BOOST = 1.8;         // hosting nets you ~1.8x what plain Auto would give
+    const EXP_PER_BILLION = 10000;
+
+    /* =========================
+       HOST CALCULATOR
+       ========================= */
+
+    function updateHost() {
+
+      const H = extractHostTotal(hostHInput.value);
+
+      const N = Math.max(2, parseInt(hostAutoInput.value) || 2);
+
+      const pos = Math.max(1, Math.min(parseInt(hostPosInput.value) || 1, N));
+
+      const level = Math.max(1, Math.min(parseInt(hostLevelInput.value) || 100, 100));
+
+      const hostedAmount = parseSingleAmount(hostedAmtInput.value);
+
+      /* Total giveaway pool (same as normal mode) */
+
+      const G = H + N * 1e9;
+
+      /* Your Gem multiplier (same curve as normal mode) */
+
+      const My = calcMultiplier(pos, N);
+
+      const Et = ENTRIES_SCALE * N;
+
+      const Pnormal = (level * My) / Et;
+
+      /* Extra flat chance from the private host pool */
+
+      const Ptotal = Pnormal * HOST_BOOST;
+
+      const EV = G * Ptotal;
+
+      /* Estimation range, same shaping as normal mode */
+
+      const xBillions = EV / 1e9;
+
+      const D = rangeDivider(xBillions);
+
+      const X = Math.max(0, EV - EV / D);
+
+      const EV_low = Math.max(0, X - X / D);
+
+      const EV_high = X + X / D;
+
+      /* EXP earned from hosting */
+
+      const exp = (hostedAmount / 1e9) * EXP_PER_BILLION;
+
+      /* =========================
+         BALANCE-BASED EXTRAS
+         ========================= */
+
+      const balance = parseSingleAmount(balanceInput.value);
+
+      const isFriday = fridayInput.value === 'yes';
+
+      const isBooster = boosterInput.value === 'yes';
+
+      const userEntries = calcUserEntries(balance, isBooster);
+
+      /* Interest */
+
+      const interestProfit = balance * INTEREST_RATE;
+
+      /* Channel giveaways — expected value from win odds, no simulation */
+
+      const weeklyProfit = isFriday
+        ? expectedGiveawayProfit(4, 25, 2.5e9, userEntries, TOTAL_CHANNEL_ENTRIES)
+        : 0;
+
+      const dailyProfit =
+        expectedGiveawayProfit(16, 25, 125e6, userEntries, TOTAL_CHANNEL_ENTRIES);
+
+      const gemsProfit =
+        expectedGiveawayProfit(16, 25, 125e6, userEntries, TOTAL_CHANNEL_ENTRIES);
+
+      const boosterProfit = isBooster
+        ? expectedGiveawayProfit(8, 25, 125e6, userEntries, BOOSTER_POOL_ENTRIES)
+        : 0;
+
+      /* /exchange (EXP earned from hosting -> balance) */
+
+      const exchangeProfit =
+        (exp / EXCHANGE_EXP_UNIT) * EXCHANGE_BAL_PER_UNIT;
+
+      const extraProfit =
+        interestProfit +
+        weeklyProfit +
+        dailyProfit +
+        gemsProfit +
+        boosterProfit +
+        exchangeProfit;
+
+      /* Profit is what you won from hosting/pools minus what you spent
+         hosting, plus everything else the account earned */
+
+      const profit_low = (EV_low - hostedAmount) + extraProfit;
+
+      const profit_high = (EV_high - hostedAmount) + extraProfit;
+
+      /* Gem rank bar (still 0.1x-5x, host bonus shown separately) */
+
+      const t = (My - MULT_MIN) / (MULT_MAX - MULT_MIN);
+
+      const pct = t * 100;
+
+      /* Display */
+
+      hostEvAmount.textContent = `${formatAmount(EV_low)} - ${formatAmount(EV_high)}`;
+
+      hostBarFill.style.width = `${pct}%`;
+
+      hostGVal.textContent = formatAmount(G);
+
+      hostMVal.textContent = `${My.toFixed(2)}×`;
+
+      hostBonusVal.textContent = `${HOST_BOOST}× (avg ${HOST_POOL_SIZE} hosts share the pool)`;
+
+      hostPVal.textContent = `${(Ptotal * 100).toFixed(4)}%`;
+
+      hostExpVal.childNodes[0].textContent = `${exp.toLocaleString(undefined, { maximumFractionDigits: 0 })} `;
+
+      hostInterestVal.textContent = formatAmount(interestProfit);
+
+      hostWeeklyVal.textContent = isFriday
+        ? formatAmount(weeklyProfit)
+        : `${formatAmount(0)} (not Friday)`;
+
+      hostDailyVal.textContent = formatAmount(dailyProfit);
+
+      hostGemsVal.textContent = formatAmount(gemsProfit);
+
+      hostBoosterVal.textContent = isBooster
+        ? formatAmount(boosterProfit)
+        : `${formatAmount(0)} (not a booster)`;
+
+      hostExchangeVal.textContent = formatAmount(exchangeProfit);
+
+      hostProfitVal.textContent = `${formatAmount(profit_low)} - ${formatAmount(profit_high)}`;
+
+      const isNegative = profit_high < 0;
+
+      hostProfitVal.classList.toggle('negative', isNegative);
+
+      hostProfitWarning.classList.toggle('show', isNegative);
+    }
+
+    [
+      hostHInput,
+      hostAutoInput,
+      hostPosInput,
+      hostLevelInput,
+      hostedAmtInput,
+      balanceInput
+    ].forEach(el => {
+      el.addEventListener('input', updateHost);
+    });
+
+    [
+      fridayInput,
+      boosterInput
+    ].forEach(el => {
+      el.addEventListener('change', updateHost);
+    });
+
+    updateHost();
+
+    /* =========================
+       MODE TOGGLE (Auto <-> Host)
+       ========================= */
+
+    let hostModeActive = false;
+
+    function toggleMode() {
+
+      const btn = document.getElementById('mode-toggle');
+      const cardAuto = document.getElementById('card-auto');
+      const cardHost = document.getElementById('card-host');
+      const bgNormal = document.getElementById('bg-normal');
+      const bgHost = document.getElementById('bg-host');
+      const particlesEl = document.getElementById('particles');
+
+      hostModeActive = !hostModeActive;
+
+      btn.classList.toggle('active', hostModeActive);
+      bgNormal.classList.toggle('visible', !hostModeActive);
+      bgHost.classList.toggle('visible', hostModeActive);
+      particlesEl.classList.toggle('host', hostModeActive);
+
+      const outgoing = hostModeActive ? cardAuto : cardHost;
+      const incoming = hostModeActive ? cardHost : cardAuto;
+
+      outgoing.style.opacity = '0';
+      outgoing.style.transform = 'scale(0.97)';
+
+      setTimeout(() => {
+
+        outgoing.style.display = 'none';
+
+        incoming.style.display = 'block';
+        incoming.style.opacity = '0';
+        incoming.style.transform = 'scale(0.97)';
+
+        void incoming.offsetWidth; // force reflow so the transition below fires
+
+        incoming.style.opacity = '1';
+        incoming.style.transform = 'scale(1)';
+
+      }, 200);
+    }
+
+  </script>
+
+</body>
+</html>
