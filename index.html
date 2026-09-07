@@ -2155,6 +2155,85 @@
 
 
     /* =========================
+       CHANNEL GIVEAWAY CONSTANTS
+       ========================= */
+
+    const ENTRY_PER_BALANCE = 32e6; // 32M balance = 1 entry
+
+    // Member balance milestones below 48B — every member in a tier is
+    // assumed to sit exactly at that tier's balance
+    const MEMBER_MILESTONES = [
+      { count: 50000, balance: 50e6 },
+      { count: 7200,  balance: 400e6 },
+      { count: 1900,  balance: 1.2e9 },
+      { count: 1800,  balance: 2.5e9 },
+      { count: 1300,  balance: 6e9 },
+      { count: 950,   balance: 20e9 }
+    ];
+
+    // Top 150 gem-rank members (>48B), estimated from gem rank position
+    // + reported balance instead of a flat member count
+    const TOP_GEM_GROUPS = [
+      { count: 30, avgBalance: 54e9 },   // rank ~150-120, 48-60B
+      { count: 40, avgBalance: 95e9 },   // rank ~120-80, 70-120B
+      { count: 30, avgBalance: 315e9 },  // rank ~79-50, 130-500B
+      { count: 20, avgBalance: 600e9 },  // rank ~49-30, 500-700B
+      { count: 15, avgBalance: 850e9 },  // rank ~29-15, 700-1000B
+      { count: 15, avgBalance: 5500e9 }  // rank ~15-1, 1000-10000B
+    ];
+
+    function computeTotalChannelEntries() {
+
+      let entries = 0;
+
+      MEMBER_MILESTONES.forEach(m => {
+        entries += m.count * (m.balance / ENTRY_PER_BALANCE);
+      });
+
+      TOP_GEM_GROUPS.forEach(g => {
+        entries += g.count * (g.avgBalance / ENTRY_PER_BALANCE);
+      });
+
+      return entries;
+    }
+
+    const TOTAL_CHANNEL_ENTRIES = computeTotalChannelEntries();
+
+    // Private booster giveaway pool: 120 boosters, average balance 20B
+    const BOOSTER_POOL_SIZE = 120;
+    const BOOSTER_AVG_BALANCE = 20e9;
+
+    const BOOSTER_POOL_ENTRIES =
+      BOOSTER_POOL_SIZE * (BOOSTER_AVG_BALANCE / ENTRY_PER_BALANCE + 100);
+
+    const INTEREST_RATE = 0.003; // 0.3%
+    const EXCHANGE_EXP_UNIT = 500;
+    const EXCHANGE_BAL_PER_UNIT = 8e6; // 500 EXP = 8M balance
+
+    function calcUserEntries(balance, isBooster) {
+
+      let entries = balance / ENTRY_PER_BALANCE;
+
+      if (isBooster) {
+        entries += 100;
+      }
+
+      entries += 2500; // hosting is always assumed on this page
+
+      return entries;
+    }
+
+    function expectedGiveawayProfit(draws, winnersPerDraw, prizePerWin, userEntries, poolEntries) {
+
+      if (poolEntries <= 0) return 0;
+
+      const winChancePerDraw = winnersPerDraw * (userEntries / poolEntries);
+
+      return draws * winChancePerDraw * prizePerWin;
+    }
+
+
+    /* =========================
        HOST MODE ELEMENTS
        ========================= */
 
@@ -2164,12 +2243,22 @@
     const hostLevelInput  = document.getElementById('host-level');
     const hostedAmtInput  = document.getElementById('hosted-amount');
 
+    const balanceInput    = document.getElementById('balance');
+    const fridayInput     = document.getElementById('is-friday');
+    const boosterInput    = document.getElementById('is-booster');
+
     const hostEvAmount    = document.getElementById('host-ev-amount');
     const hostBarFill     = document.getElementById('host-bar-fill');
     const hostGVal        = document.getElementById('host-g-val');
     const hostMVal        = document.getElementById('host-m-val');
     const hostPVal        = document.getElementById('host-p-val');
     const hostExpVal      = document.getElementById('host-exp-val');
+    const hostInterestVal = document.getElementById('host-interest-val');
+    const hostWeeklyVal   = document.getElementById('host-weekly-val');
+    const hostDailyVal    = document.getElementById('host-daily-val');
+    const hostGemsVal     = document.getElementById('host-gems-val');
+    const hostBoosterVal  = document.getElementById('host-booster-val');
+    const hostExchangeVal = document.getElementById('host-exchange-val');
     const hostProfitVal   = document.getElementById('host-profit-val');
     const hostProfitWarning = document.getElementById('host-profit-warning');
 
@@ -2229,16 +2318,65 @@
       const EV_high = X + X / D;
 
 
-      /* Profit is based on what you actually spent hosting */
-
-      const profit_low = EV_low - hostedAmount;
-
-      const profit_high = EV_high - hostedAmount;
-
-
       /* EXP earned from hosting */
 
       const exp = (hostedAmount / 1e9) * EXP_PER_BILLION;
+
+
+      /* =========================
+         BALANCE-BASED EXTRAS
+         ========================= */
+
+      const balance = parseSingleAmount(balanceInput.value);
+
+      const isFriday = fridayInput.value === 'yes';
+
+      const isBooster = boosterInput.value === 'yes';
+
+      const userEntries = calcUserEntries(balance, isBooster);
+
+
+      /* Interest */
+
+      const interestProfit = balance * INTEREST_RATE;
+
+
+      /* Channel giveaways — expected value from win odds, no simulation */
+
+      const weeklyProfit = isFriday
+        ? expectedGiveawayProfit(4, 25, 2.5e9, userEntries, TOTAL_CHANNEL_ENTRIES)
+        : 0;
+
+      const dailyProfit =
+        expectedGiveawayProfit(16, 25, 125e6, userEntries, TOTAL_CHANNEL_ENTRIES);
+
+      const gemsProfit =
+        expectedGiveawayProfit(16, 25, 125e6, userEntries, TOTAL_CHANNEL_ENTRIES);
+
+      const boosterProfit = isBooster
+        ? expectedGiveawayProfit(8, 25, 125e6, userEntries, BOOSTER_POOL_ENTRIES)
+        : 0;
+
+
+      /* /exchange (EXP earned from hosting -> balance) */
+
+      const exchangeProfit = (exp / EXCHANGE_EXP_UNIT) * EXCHANGE_BAL_PER_UNIT;
+
+      const extraProfit =
+        interestProfit +
+        weeklyProfit +
+        dailyProfit +
+        gemsProfit +
+        boosterProfit +
+        exchangeProfit;
+
+
+      /* Profit is what you won from hosting/pools minus what you spent
+         hosting, plus everything else the account earned */
+
+      const profit_low = (EV_low - hostedAmount) + extraProfit;
+
+      const profit_high = (EV_high - hostedAmount) + extraProfit;
 
 
       /* Gem rank bar (still 0.1x-5x, host bonus shown separately) */
@@ -2262,6 +2400,22 @@
 
       hostExpVal.childNodes[0].textContent = `${exp.toLocaleString(undefined, { maximumFractionDigits: 0 })} `;
 
+      hostInterestVal.textContent = formatAmount(interestProfit);
+
+      hostWeeklyVal.textContent = isFriday
+        ? formatAmount(weeklyProfit)
+        : `${formatAmount(0)} (not Friday)`;
+
+      hostDailyVal.textContent = formatAmount(dailyProfit);
+
+      hostGemsVal.textContent = formatAmount(gemsProfit);
+
+      hostBoosterVal.textContent = isBooster
+        ? formatAmount(boosterProfit)
+        : `${formatAmount(0)} (not a booster)`;
+
+      hostExchangeVal.textContent = formatAmount(exchangeProfit);
+
       hostProfitVal.textContent = `${formatAmount(profit_low)} - ${formatAmount(profit_high)}`;
 
 
@@ -2278,9 +2432,17 @@
       hostAutoInput,
       hostPosInput,
       hostLevelInput,
-      hostedAmtInput
+      hostedAmtInput,
+      balanceInput
     ].forEach(el => {
       el.addEventListener('input', updateHost);
+    });
+
+    [
+      fridayInput,
+      boosterInput
+    ].forEach(el => {
+      el.addEventListener('change', updateHost);
     });
 
     updateHost();
