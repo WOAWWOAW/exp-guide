@@ -449,6 +449,25 @@
       color: #ff5c5c;
     }
 
+    .breakdown-subheader {
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.3);
+      margin-top: 2px;
+    }
+
+    .breakdown-group {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding: 12px 14px;
+      border-left: 2px solid rgba(138, 123, 255, 0.35);
+      background: rgba(255, 255, 255, 0.02);
+      border-radius: 0 8px 8px 0;
+    }
+
     .warning-note {
       display: none;
       font-size: 0.75rem;
@@ -797,6 +816,7 @@
 
         </div>
 
+
         <div class="input-group">
 
           <label class="input-label" for="autoN">
@@ -825,9 +845,11 @@
 
         </div>
 
+
         <div class="section-label">
           Your stats
         </div>
+
 
         <div class="row-2">
 
@@ -851,6 +873,7 @@
             </div>
 
           </div>
+
 
           <div class="input-group">
 
@@ -878,7 +901,9 @@
 
       </div>
 
+
       <div class="panel-divider"></div>
+
 
       <!-- RIGHT PANEL -->
 
@@ -889,6 +914,7 @@
           <div class="result-label">
             Expected Winnings (24h)
           </div>
+
 
           <!-- EXPECTED BALANCE + ANIMATED Z50 IMAGE -->
 
@@ -904,6 +930,7 @@
 
           </div>
 
+
           <div class="bar-track">
 
             <div
@@ -914,10 +941,12 @@
 
           </div>
 
+
           <div class="bar-labels">
             <span id="bar-min-label">0.1×</span>
             <span>5×</span>
           </div>
+
 
           <div class="breakdown">
 
@@ -943,12 +972,14 @@
 
           </div>
 
+
           <div
             class="warning-note"
             id="profit-warning"
           >
             Giveaway Auto is not recommended
           </div>
+
 
           <div
             class="footer-note"
@@ -963,6 +994,7 @@
 
     </div>
 
+
     <div class="info-button-wrapper">
 
       <button
@@ -976,6 +1008,7 @@
     </div>
 
   </div>
+
 
   <!-- HOST MODE CARD -->
 
@@ -1021,6 +1054,7 @@
 
         </div>
 
+
         <div class="input-group">
 
           <label class="input-label" for="host-autoN">
@@ -1049,9 +1083,11 @@
 
         </div>
 
+
         <div class="section-label">
           Your stats
         </div>
+
 
         <div class="row-2">
 
@@ -1076,6 +1112,7 @@
 
           </div>
 
+
           <div class="input-group">
 
             <label class="input-label" for="host-level">
@@ -1099,6 +1136,7 @@
           </div>
 
         </div>
+
 
         <div class="section-label">
           Your hosting
@@ -1125,6 +1163,7 @@
           </div>
 
         </div>
+
 
         <div class="section-label">
           Channel giveaways
@@ -1183,7 +1222,9 @@
 
       </div>
 
+
       <div class="panel-divider"></div>
+
 
       <!-- RIGHT PANEL -->
 
@@ -1194,6 +1235,7 @@
           <div class="result-label">
             Expected Winnings (24h)
           </div>
+
 
           <div class="result-value" id="host-ev-display">
 
@@ -1207,6 +1249,7 @@
 
           </div>
 
+
           <div class="bar-track">
 
             <div
@@ -1217,10 +1260,12 @@
 
           </div>
 
+
           <div class="bar-labels">
             <span>0.1×</span>
             <span>5×</span>
           </div>
+
 
           <div class="breakdown">
 
@@ -1232,11 +1277,6 @@
             <div class="breakdown-row">
               <span class="k">Gem multiplier</span>
               <span class="v" id="host-m-val">—</span>
-            </div>
-
-            <div class="breakdown-row">
-              <span class="k">Host pool boost</span>
-              <span class="v" id="host-bonus-val">—</span>
             </div>
 
             <div class="breakdown-row">
@@ -1257,24 +1297,32 @@
               <span class="v" id="host-interest-val">—</span>
             </div>
 
-            <div class="breakdown-row">
-              <span class="k">Weekly gw profit</span>
-              <span class="v" id="host-weekly-val">—</span>
+            <div class="breakdown-subheader">
+              Channel giveaways
             </div>
 
-            <div class="breakdown-row">
-              <span class="k">Daily gw profit</span>
-              <span class="v" id="host-daily-val">—</span>
-            </div>
+            <div class="breakdown-group">
 
-            <div class="breakdown-row">
-              <span class="k">Gems gw profit</span>
-              <span class="v" id="host-gems-val">—</span>
-            </div>
+              <div class="breakdown-row">
+                <span class="k">Weekly gw profit</span>
+                <span class="v" id="host-weekly-val">—</span>
+              </div>
 
-            <div class="breakdown-row">
-              <span class="k">Booster gw profit</span>
-              <span class="v" id="host-booster-val">—</span>
+              <div class="breakdown-row">
+                <span class="k">Daily gw profit</span>
+                <span class="v" id="host-daily-val">—</span>
+              </div>
+
+              <div class="breakdown-row">
+                <span class="k">Gems gw profit</span>
+                <span class="v" id="host-gems-val">—</span>
+              </div>
+
+              <div class="breakdown-row">
+                <span class="k">Booster gw profit</span>
+                <span class="v" id="host-booster-val">—</span>
+              </div>
+
             </div>
 
             <div class="breakdown-row">
@@ -1289,12 +1337,14 @@
 
           </div>
 
+
           <div
             class="warning-note"
             id="host-profit-warning"
           >
             Giveaway Auto is not recommended
           </div>
+
 
           <div class="footer-note">
             Tool by WOAW
@@ -1305,6 +1355,7 @@
       </div>
 
     </div>
+
 
     <div class="info-button-wrapper">
 
@@ -1321,6 +1372,7 @@
   </div>
 
   </div>
+
 
   <!-- =========================
        EXTRA INFORMATION MODAL
@@ -1343,9 +1395,11 @@
         ×
       </button>
 
+
       <div class="modal-title">
         Extra information
       </div>
+
 
       <div class="modal-section">
 
@@ -1362,6 +1416,7 @@
 
       </div>
 
+
       <div class="modal-section">
 
         <h3>
@@ -1372,6 +1427,7 @@
           To work, this tool relies on several assumptions due to the lack of knowledge
           we have concerning the way EXP handles pools, gem rank and giveaways:
         </p>
+
 
         <ul>
 
@@ -1415,15 +1471,10 @@
             Those add way too much complexity for a simple tool, so they might be added in the future.
           </li>
 
-          <li>
-            Channel giveaway entries are estimated from rough member-count milestones
-            per balance tier, plus a gem-rank-based estimate for the wealthiest members.
-            Every member below a tier is assumed to sit exactly at that tier's balance.
-          </li>
-
         </ul>
 
       </div>
+
 
       <div class="modal-section">
 
@@ -1438,6 +1489,7 @@
         </p>
 
       </div>
+
 
       <div class="modal-section">
 
@@ -1456,6 +1508,7 @@
     </div>
 
   </div>
+
 
   <!-- =========================
        HOST IMAGE MODAL
@@ -1478,14 +1531,17 @@
         ×
       </button>
 
+
       <div class="modal-title">
         Host leaderboard
       </div>
+
 
       <img
         src="https://media.discordapp.net/attachments/1492616327830175856/1545857686791266345/image.png?ex=6a9daba9&is=6a9c5a29&hm=772858b4c9e44731b13fa7c80658a667c526045689d2fb43429a9ea44d52d7aa&=&format=webp&quality=lossless"
         alt="Host leaderboard example"
       >
+
 
       <div class="image-caption">
         Run the <strong>/giveaway daily</strong> command and paste the leaderboard in the input
@@ -1494,6 +1550,7 @@
     </div>
 
   </div>
+
 
   <!-- =========================
        ENTRIES IMAGE MODAL
@@ -1516,14 +1573,17 @@
         ×
       </button>
 
+
       <div class="modal-title">
         Amount of Entries
       </div>
+
 
       <img
         src="https://media.discordapp.net/attachments/1492616327830175856/1545875496250646578/IMG_5614.png?ex=6a9dbc3f&is=6a9c6abf&hm=b12d4978e842ebb61bce9350cbb3f7047500ee7da3e941a0fce5feb144b692bc&=&format=webp&quality=lossless"
         alt="Giveaway entries example"
       >
+
 
       <div class="image-caption">
         Find a recent giveaway result message (for a 250M+ giveaway)
@@ -1533,6 +1593,7 @@
     </div>
 
   </div>
+
 
   <script>
 
@@ -1544,6 +1605,7 @@
       document.getElementById('particles');
 
     const particleCount = 30;
+
 
     for (let i = 0; i < particleCount; i++) {
 
@@ -1569,6 +1631,7 @@
 
     }
 
+
     /* =========================
        HOST LEADERBOARD PARSER
        ========================= */
@@ -1585,6 +1648,7 @@
 
       let total = 0;
 
+
       for (const tok of tokens) {
 
         const m =
@@ -1596,6 +1660,7 @@
             parseFloat(
               m[1].replace(/,/g, '')
             );
+
 
           if (!isNaN(num)) {
 
@@ -1610,8 +1675,10 @@
 
       }
 
+
       return total;
     }
+
 
     /* =========================
        NUMBER FORMATTING
@@ -1624,6 +1691,7 @@
 
       n =
         Math.abs(n);
+
 
       if (n >= 1e9) {
 
@@ -1638,6 +1706,7 @@
 
       }
 
+
       if (n >= 1e6) {
 
         return sign +
@@ -1650,6 +1719,7 @@
           'M';
 
       }
+
 
       if (n >= 1e3) {
 
@@ -1664,6 +1734,7 @@
 
       }
 
+
       return sign +
         n.toLocaleString(
           undefined,
@@ -1673,6 +1744,7 @@
         );
 
     }
+
 
     /* =========================
        CALIBRATION CONSTANTS
@@ -1685,6 +1757,7 @@
 
     const ENTRIES_SCALE = 223;
 
+
     /* =========================
        GEM MULTIPLIER
        ========================= */
@@ -1695,14 +1768,17 @@
         return MULT_MAX;
       }
 
+
       const x =
         (n - p) / (n - 1);
+
 
       return MULT_MIN +
         (MULT_MAX - MULT_MIN) *
         Math.pow(x, CURVE_K);
 
     }
+
 
     /* =========================
        ESTIMATION RANGE
@@ -1714,6 +1790,7 @@
       const Dmin = 2.5;
       const k = 0.05;
 
+
       return Math.max(
         Dmin,
         D0 / (1 + k * xBillions)
@@ -1721,11 +1798,13 @@
 
     }
 
+
     function rangeMultiplier(divider) {
 
       return divider * 0.75;
 
     }
+
 
     /* =========================
        ELEMENTS
@@ -1764,6 +1843,7 @@
     const profitWarning =
       document.getElementById('profit-warning');
 
+
     /* =========================
        CALCULATOR
        ========================= */
@@ -1775,11 +1855,13 @@
           hostInput.value
         );
 
+
       const N =
         Math.max(
           2,
           parseInt(autoInput.value) || 2
         );
+
 
       const pos =
         Math.max(
@@ -1790,6 +1872,7 @@
           )
         );
 
+
       const level =
         Math.max(
           1,
@@ -1799,10 +1882,12 @@
           )
         );
 
+
       /* Total giveaway pool */
 
       const G =
         H + N * 1e9;
+
 
       /* Your Gem multiplier */
 
@@ -1812,35 +1897,42 @@
           N
         );
 
+
       /* Estimated total entries */
 
       const Et =
         ENTRIES_SCALE * N;
+
 
       /* Your probability per giveaway */
 
       const P =
         (level * My) / Et;
 
+
       /* Expected winnings */
 
       const EV =
         G * P;
+
 
       /* Estimation range */
 
       const xBillions =
         EV / 1e9;
 
+
       const D =
         rangeDivider(
           xBillions
         );
 
+
       const M =
         rangeMultiplier(
           D
         );
+
 
       const X =
         Math.max(
@@ -1848,22 +1940,27 @@
           EV - EV / D
         );
 
+
       const EV_low =
         Math.max(
           0,
           X - X / D
         );
 
+
       const EV_high =
         X + X / D;
+
 
       /* Profit */
 
       const profit_low =
         EV_low - 1e9;
 
+
       const profit_high =
         EV_high - 1e9;
+
 
       /* Gem rank bar */
 
@@ -1871,36 +1968,46 @@
         (My - MULT_MIN) /
         (MULT_MAX - MULT_MIN);
 
+
       const pct =
         t * 100;
+
 
       /* Display */
 
       evAmount.textContent =
         `${formatAmount(EV_low)} - ${formatAmount(EV_high)}`;
 
+
       barFill.style.width =
         `${pct}%`;
+
 
       gVal.textContent =
         formatAmount(G);
 
+
       mVal.textContent =
         `${My.toFixed(2)}×`;
+
 
       pVal.textContent =
         `${(P * 100).toFixed(4)}%`;
 
+
       profitVal.textContent =
         `${formatAmount(profit_low)} - ${formatAmount(profit_high)}`;
 
+
       const isNegative =
         profit_high < 0;
+
 
       profitVal.classList.toggle(
         'negative',
         isNegative
       );
+
 
       profitWarning.classList.toggle(
         'show',
@@ -1908,6 +2015,7 @@
       );
 
     }
+
 
     /* =========================
        INPUT LISTENERS
@@ -1927,6 +2035,7 @@
 
     });
 
+
     /* =========================
        MODALS
        ========================= */
@@ -1945,6 +2054,7 @@
 
     }
 
+
     function closeModal(id) {
 
       const modal =
@@ -1954,10 +2064,12 @@
 
       modal.classList.remove('show');
 
+
       const anyOpen =
         document.querySelector(
           '.modal-overlay.show'
         );
+
 
       if (!anyOpen) {
 
@@ -1968,6 +2080,7 @@
 
     }
 
+
     function closeOnOverlay(event, id) {
 
       if (event.target.id === id) {
@@ -1977,6 +2090,7 @@
       }
 
     }
+
 
     /* =========================
        ESCAPE KEY
@@ -1990,10 +2104,12 @@
           return;
         }
 
+
         const open =
           document.querySelector(
             '.modal-overlay.show'
           );
+
 
         if (open) {
 
@@ -2006,15 +2122,17 @@
       }
     );
 
+
     /* =========================
        INITIAL CALCULATION
        ========================= */
 
     update();
 
+
     /* =========================
        SINGLE-VALUE AMOUNT PARSER
-       (for "how much you hosted" / "balance")
+       (for "how much you hosted")
        ========================= */
 
     function parseSingleAmount(str) {
@@ -2035,86 +2153,6 @@
       return m[2].toLowerCase() === 'b' ? num * 1e9 : num * 1e6;
     }
 
-    /* =========================
-       CHANNEL GIVEAWAY CONSTANTS
-       ========================= */
-
-    const ENTRY_PER_BALANCE = 32e6; // 32M balance = 1 entry
-
-    // Member balance milestones below 48B — every member in a tier is
-    // assumed to sit exactly at that tier's balance
-    const MEMBER_MILESTONES = [
-      { count: 50000, balance: 50e6 },
-      { count: 7200,  balance: 400e6 },
-      { count: 1900,  balance: 1.2e9 },
-      { count: 1800,  balance: 2.5e9 },
-      { count: 1300,  balance: 6e9 },
-      { count: 950,   balance: 20e9 }
-    ];
-
-    // Top 150 gem-rank members (>48B), estimated from gem rank position
-    // + reported balance instead of a flat member count
-    const TOP_GEM_GROUPS = [
-      { count: 30, avgBalance: 54e9 },   // rank ~150-120, 48-60B
-      { count: 40, avgBalance: 95e9 },   // rank ~120-80, 70-120B
-      { count: 30, avgBalance: 315e9 },  // rank ~79-50, 130-500B
-      { count: 20, avgBalance: 600e9 },  // rank ~49-30, 500-700B
-      { count: 15, avgBalance: 850e9 },  // rank ~29-15, 700-1000B
-      { count: 15, avgBalance: 5500e9 }  // rank ~15-1, 1000-10000B
-    ];
-
-    function computeTotalChannelEntries() {
-
-      let entries = 0;
-
-      MEMBER_MILESTONES.forEach(m => {
-        entries += m.count * (m.balance / ENTRY_PER_BALANCE);
-      });
-
-      TOP_GEM_GROUPS.forEach(g => {
-        entries += g.count * (g.avgBalance / ENTRY_PER_BALANCE);
-      });
-
-      return entries;
-    }
-
-    const TOTAL_CHANNEL_ENTRIES =
-      computeTotalChannelEntries();
-
-    // Private booster giveaway pool: 120 boosters, average balance 20B
-    const BOOSTER_POOL_SIZE = 120;
-    const BOOSTER_AVG_BALANCE = 20e9;
-
-    const BOOSTER_POOL_ENTRIES =
-      BOOSTER_POOL_SIZE * (BOOSTER_AVG_BALANCE / ENTRY_PER_BALANCE);
-
-    const INTEREST_RATE = 0.003; // 0.3%
-    const EXCHANGE_EXP_UNIT = 500;
-    const EXCHANGE_BAL_PER_UNIT = 8e6; // 500 EXP = 8M balance
-
-    function calcUserEntries(balance, isBooster) {
-
-      let entries =
-        balance / ENTRY_PER_BALANCE;
-
-      if (isBooster) {
-        entries += 100;
-      }
-
-      entries += 2500; // hosting is always assumed on this page
-
-      return entries;
-    }
-
-    function expectedGiveawayProfit(draws, winnersPerDraw, prizePerWin, userEntries, poolEntries) {
-
-      if (poolEntries <= 0) return 0;
-
-      const winChancePerDraw =
-        winnersPerDraw * (userEntries / poolEntries);
-
-      return draws * winChancePerDraw * prizePerWin;
-    }
 
     /* =========================
        HOST MODE ELEMENTS
@@ -2126,29 +2164,19 @@
     const hostLevelInput  = document.getElementById('host-level');
     const hostedAmtInput  = document.getElementById('hosted-amount');
 
-    const balanceInput    = document.getElementById('balance');
-    const fridayInput     = document.getElementById('is-friday');
-    const boosterInput    = document.getElementById('is-booster');
-
     const hostEvAmount    = document.getElementById('host-ev-amount');
     const hostBarFill     = document.getElementById('host-bar-fill');
     const hostGVal        = document.getElementById('host-g-val');
     const hostMVal        = document.getElementById('host-m-val');
-    const hostBonusVal    = document.getElementById('host-bonus-val');
     const hostPVal        = document.getElementById('host-p-val');
     const hostExpVal      = document.getElementById('host-exp-val');
-    const hostInterestVal = document.getElementById('host-interest-val');
-    const hostWeeklyVal   = document.getElementById('host-weekly-val');
-    const hostDailyVal    = document.getElementById('host-daily-val');
-    const hostGemsVal     = document.getElementById('host-gems-val');
-    const hostBoosterVal  = document.getElementById('host-booster-val');
-    const hostExchangeVal = document.getElementById('host-exchange-val');
     const hostProfitVal   = document.getElementById('host-profit-val');
     const hostProfitWarning = document.getElementById('host-profit-warning');
 
     const HOST_POOL_SIZE = 28;      // average number of hosts sharing the private pool
     const HOST_BOOST = 1.8;         // hosting nets you ~1.8x what plain Auto would give
     const EXP_PER_BILLION = 10000;
+
 
     /* =========================
        HOST CALCULATOR
@@ -2166,9 +2194,11 @@
 
       const hostedAmount = parseSingleAmount(hostedAmtInput.value);
 
+
       /* Total giveaway pool (same as normal mode) */
 
       const G = H + N * 1e9;
+
 
       /* Your Gem multiplier (same curve as normal mode) */
 
@@ -2178,11 +2208,13 @@
 
       const Pnormal = (level * My) / Et;
 
+
       /* Extra flat chance from the private host pool */
 
       const Ptotal = Pnormal * HOST_BOOST;
 
       const EV = G * Ptotal;
+
 
       /* Estimation range, same shaping as normal mode */
 
@@ -2196,67 +2228,25 @@
 
       const EV_high = X + X / D;
 
+
+      /* Profit is based on what you actually spent hosting */
+
+      const profit_low = EV_low - hostedAmount;
+
+      const profit_high = EV_high - hostedAmount;
+
+
       /* EXP earned from hosting */
 
       const exp = (hostedAmount / 1e9) * EXP_PER_BILLION;
 
-      /* =========================
-         BALANCE-BASED EXTRAS
-         ========================= */
-
-      const balance = parseSingleAmount(balanceInput.value);
-
-      const isFriday = fridayInput.value === 'yes';
-
-      const isBooster = boosterInput.value === 'yes';
-
-      const userEntries = calcUserEntries(balance, isBooster);
-
-      /* Interest */
-
-      const interestProfit = balance * INTEREST_RATE;
-
-      /* Channel giveaways — expected value from win odds, no simulation */
-
-      const weeklyProfit = isFriday
-        ? expectedGiveawayProfit(4, 25, 2.5e9, userEntries, TOTAL_CHANNEL_ENTRIES)
-        : 0;
-
-      const dailyProfit =
-        expectedGiveawayProfit(16, 25, 125e6, userEntries, TOTAL_CHANNEL_ENTRIES);
-
-      const gemsProfit =
-        expectedGiveawayProfit(16, 25, 125e6, userEntries, TOTAL_CHANNEL_ENTRIES);
-
-      const boosterProfit = isBooster
-        ? expectedGiveawayProfit(8, 25, 125e6, userEntries, BOOSTER_POOL_ENTRIES)
-        : 0;
-
-      /* /exchange (EXP earned from hosting -> balance) */
-
-      const exchangeProfit =
-        (exp / EXCHANGE_EXP_UNIT) * EXCHANGE_BAL_PER_UNIT;
-
-      const extraProfit =
-        interestProfit +
-        weeklyProfit +
-        dailyProfit +
-        gemsProfit +
-        boosterProfit +
-        exchangeProfit;
-
-      /* Profit is what you won from hosting/pools minus what you spent
-         hosting, plus everything else the account earned */
-
-      const profit_low = (EV_low - hostedAmount) + extraProfit;
-
-      const profit_high = (EV_high - hostedAmount) + extraProfit;
 
       /* Gem rank bar (still 0.1x-5x, host bonus shown separately) */
 
       const t = (My - MULT_MIN) / (MULT_MAX - MULT_MIN);
 
       const pct = t * 100;
+
 
       /* Display */
 
@@ -2268,29 +2258,12 @@
 
       hostMVal.textContent = `${My.toFixed(2)}×`;
 
-      hostBonusVal.textContent = `${HOST_BOOST}× (avg ${HOST_POOL_SIZE} hosts share the pool)`;
-
       hostPVal.textContent = `${(Ptotal * 100).toFixed(4)}%`;
 
       hostExpVal.childNodes[0].textContent = `${exp.toLocaleString(undefined, { maximumFractionDigits: 0 })} `;
 
-      hostInterestVal.textContent = formatAmount(interestProfit);
-
-      hostWeeklyVal.textContent = isFriday
-        ? formatAmount(weeklyProfit)
-        : `${formatAmount(0)} (not Friday)`;
-
-      hostDailyVal.textContent = formatAmount(dailyProfit);
-
-      hostGemsVal.textContent = formatAmount(gemsProfit);
-
-      hostBoosterVal.textContent = isBooster
-        ? formatAmount(boosterProfit)
-        : `${formatAmount(0)} (not a booster)`;
-
-      hostExchangeVal.textContent = formatAmount(exchangeProfit);
-
       hostProfitVal.textContent = `${formatAmount(profit_low)} - ${formatAmount(profit_high)}`;
+
 
       const isNegative = profit_high < 0;
 
@@ -2299,25 +2272,19 @@
       hostProfitWarning.classList.toggle('show', isNegative);
     }
 
+
     [
       hostHInput,
       hostAutoInput,
       hostPosInput,
       hostLevelInput,
-      hostedAmtInput,
-      balanceInput
+      hostedAmtInput
     ].forEach(el => {
       el.addEventListener('input', updateHost);
     });
 
-    [
-      fridayInput,
-      boosterInput
-    ].forEach(el => {
-      el.addEventListener('change', updateHost);
-    });
-
     updateHost();
+
 
     /* =========================
        MODE TOGGLE (Auto <-> Host)
