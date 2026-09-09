@@ -105,6 +105,57 @@
       position: relative;
       width: 100%;
       max-width: 880px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 24px;
+      align-items: flex-start;
+      justify-content: center;
+    }
+
+    /* Mega hangs off the right edge of the stage instead of joining the
+       centered flex row -- this way Auto/Host never has to reposition
+       itself when Mega opens or closes, so there's nothing left to glitch. */
+
+    #card-mega {
+      width: 460px;
+      max-width: 460px;
+    }
+
+    @media (min-width: 1300px) {
+      #card-mega {
+        position: absolute;
+        top: 0;
+        left: 100%;
+        margin-left: 24px;
+      }
+    }
+
+    #card-mega .card-title {
+      background: linear-gradient(120deg, #4d63ff, #172BC7);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    #card-mega .section-label {
+      color: rgba(77, 99, 255, 0.75);
+    }
+
+    #card-mega .input-field:focus {
+      border-color: #4d63ff;
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    #card-mega .bar-fill {
+      background: linear-gradient(to right, #172BC7, #6a7dff);
+    }
+
+    #card-mega .result-value {
+      background: linear-gradient(120deg, #4d63ff 0%, #4d63ff 40%, #a9b4ff 50%, #4d63ff 60%, #4d63ff 100%);
+      background-size: 200% 100%;
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
 
     .sidebar {
@@ -1780,6 +1831,112 @@
 
   </div>
 
+
+  <!-- MEGA MODE CARD -->
+
+  <div class="card mode-card" id="card-mega" style="display: none;">
+
+    <div class="card-title">MEGA Odds</div>
+
+    <div class="card-sub">
+      Odds of winning the next Mega raffle
+    </div>
+
+    <div class="input-group">
+
+      <label class="input-label" for="mega-minutes">
+        Minutes spent chatting (this 2h window)
+      </label>
+
+      <input
+        class="input-field"
+        id="mega-minutes"
+        type="number"
+        min="0"
+        max="120"
+        value="20"
+      >
+
+      <div class="input-hint">
+        Draws happen every 2 hours and tickets don't carry over between them.
+        Assumes ~3 qualifying (3+ word) messages per minute while actively chatting.
+      </div>
+
+    </div>
+
+    <div class="input-group" style="margin-bottom: 0;">
+
+      <label class="input-label" for="mega-bought">
+        Mega tickets bought
+      </label>
+
+      <input
+        class="input-field"
+        id="mega-bought"
+        type="number"
+        min="0"
+        max="100"
+        value="0"
+      >
+
+      <div class="input-hint">
+        1 ticket = 500,000 balance. Max 100 tickets.
+      </div>
+
+    </div>
+
+    <div class="result-box" style="margin-top: 22px;">
+
+      <div class="result-label">
+        Odds of winning
+      </div>
+
+      <div class="result-value" id="mega-odds-display">
+        <span id="mega-odds-amount">—</span>
+      </div>
+
+      <div class="bar-track">
+
+        <div
+          class="bar-fill"
+          id="mega-bar-fill"
+          style="width: 0%;"
+        ></div>
+
+      </div>
+
+      <div class="breakdown">
+
+        <div class="breakdown-row">
+          <span class="k">Tickets from chatting</span>
+          <span class="v" id="mega-chat-tickets">—</span>
+        </div>
+
+        <div class="breakdown-row">
+          <span class="k">Tickets bought</span>
+          <span class="v" id="mega-bought-tickets">—</span>
+        </div>
+
+        <div class="breakdown-row">
+          <span class="k">Your total tickets</span>
+          <span class="v" id="mega-your-tickets">—</span>
+        </div>
+
+        <div class="breakdown-row">
+          <span class="k">Balance spent on tickets</span>
+          <span class="v" id="mega-spent">—</span>
+        </div>
+
+      </div>
+
+      <div class="footer-note">
+        Tool by WOAW
+      </div>
+
+    </div>
+
+  </div>
+
   </div>
 
 
@@ -3091,7 +3248,8 @@
 
     /* =========================
        MEGA MODE TOGGLE
-       (UI only for now — behavior lands in a later step)
+       Mega appears as its own rectangle alongside whichever of
+       Auto/Host is currently showing -- it doesn't replace it.
        ========================= */
 
     let megaModeActive = false;
@@ -3099,11 +3257,110 @@
     function toggleMegaMode() {
 
       const btn = document.getElementById('mega-mode-toggle');
+      const cardMega = document.getElementById('card-mega');
 
       megaModeActive = !megaModeActive;
 
       btn.classList.toggle('active', megaModeActive);
+
+      if (megaModeActive) {
+
+        cardMega.style.display = 'block';
+        cardMega.style.opacity = '0';
+        cardMega.style.transform = 'scale(0.97)';
+
+        void cardMega.offsetWidth; // force reflow so the transition fires
+
+        cardMega.style.opacity = '1';
+        cardMega.style.transform = 'scale(1)';
+
+        updateMega();
+
+      } else {
+
+        cardMega.style.opacity = '0';
+        cardMega.style.transform = 'scale(0.97)';
+
+        setTimeout(() => {
+          cardMega.style.display = 'none';
+        }, 200);
+
+      }
     }
+
+
+    /* =========================
+       MEGA CALCULATOR
+       ========================= */
+
+    const MEGA_MSGS_PER_MINUTE = 3; // assumed messages/min while actively chatting
+    const MEGA_WINNERS = 10;
+    const MEGA_TICKET_COST = 500000;
+    const MEGA_MAX_BOUGHT = 100;
+    const MEGA_TOTAL_TICKETS = 26000; // usually around 26,000 in the draw
+
+    const megaMinutesInput = document.getElementById('mega-minutes');
+    const megaBoughtInput = document.getElementById('mega-bought');
+
+    const megaOddsAmount = document.getElementById('mega-odds-amount');
+    const megaBarFill = document.getElementById('mega-bar-fill');
+    const megaChatTicketsVal = document.getElementById('mega-chat-tickets');
+    const megaBoughtTicketsVal = document.getElementById('mega-bought-tickets');
+    const megaYourTicketsVal = document.getElementById('mega-your-tickets');
+    const megaSpentVal = document.getElementById('mega-spent');
+
+    function updateMega() {
+
+      const minutes =
+        Math.max(0, Math.min(parseFloat(megaMinutesInput.value) || 0, 120));
+
+      const bought =
+        Math.max(0, Math.min(parseInt(megaBoughtInput.value) || 0, MEGA_MAX_BOUGHT));
+
+      const totalTickets = MEGA_TOTAL_TICKETS;
+
+      /* Tickets from chatting: 1 ticket per 3+ word message, at the
+         assumed average message rate while actively talking */
+
+      const chatTickets =
+        Math.floor(minutes * MEGA_MSGS_PER_MINUTE);
+
+      const yourTickets = chatTickets + bought;
+
+      const spent = bought * MEGA_TICKET_COST;
+
+      /* 10 winners are drawn, so your odds are roughly 10x your simple
+         ticket share -- capped at 100% */
+
+      const rawChance =
+        MEGA_WINNERS * (yourTickets / totalTickets);
+
+      const winChance = Math.min(1, rawChance);
+
+
+      /* Display */
+
+      megaOddsAmount.textContent = `${(winChance * 100).toFixed(2)}%`;
+
+      megaBarFill.style.width = `${winChance * 100}%`;
+
+      megaChatTicketsVal.textContent = chatTickets.toLocaleString();
+
+      megaBoughtTicketsVal.textContent = bought.toLocaleString();
+
+      megaYourTicketsVal.textContent = yourTickets.toLocaleString();
+
+      megaSpentVal.textContent = formatAmount(spent);
+    }
+
+    [
+      megaMinutesInput,
+      megaBoughtInput
+    ].forEach(el => {
+      el.addEventListener('input', updateMega);
+    });
+
+    updateMega();
 
 
     /* =========================
